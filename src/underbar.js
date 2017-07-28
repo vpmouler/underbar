@@ -260,6 +260,16 @@
   // provided, provide a default one
   _.some = function(collection, iterator) {
     // TIP: There's a very clever way to re-use every() here.
+    // every checks whether every element is true
+    // it start with true, and if one element is false, consecutively returns false
+    // var truth = false;
+    // return _.every(collection, function(element) {
+    // 	if ( iterator(element) )
+    // 		truth = true;
+    // 	return truth == true;
+    // })
+
+    /*
     var truth = false;
     return _.every(collection, function(element) {
       if ( iterator && iterator(element) )
@@ -268,16 +278,17 @@
         truth = true;
       return truth;
     })
+    */
     // [null, 0, 'yes', false]
     //_.some([1, 10, 29], isEven)
 
-    // return _.reduce(collection, function(start, element) {
-    //   if ( iterator && iterator(element) )
-    //     return true;
-    //   if ( !iterator && element == true)
-    //     return true;
-    //   return start == true;
-    // }, false)
+    return _.reduce(collection, function(start, element) {
+      if ( iterator && iterator(element) )
+        return true;
+      if ( !iterator && element == true)
+        return true;
+      return start == true;
+    }, false)
   };
 
 
@@ -300,11 +311,27 @@
   //     bla: "even more stuff"
   //   }); // obj1 now contains key1, key2, key3 and bla
   _.extend = function(obj) {
+  	// arguments can be more than 1 - loop through arguments
+  	// loop through each arguments key/value and add it to obj
+  	for ( var i = 1; i < arguments.length; i++ ) {
+  		for ( var key in arguments[i] ) {
+  			obj[key] = arguments[i][key];
+  		}
+  	}
+  	return obj;
   };
 
   // Like extend, but doesn't ever overwrite a key that already
   // exists in obj
   _.defaults = function(obj) {
+  	// same as extend, but check if key in obj first
+  	for ( var i = 1; i < arguments.length; i++ ) {
+      for ( var key in arguments[i] ) {
+      	if ( !key in obj )
+  		  obj[key] = arguments[i][key];
+  	  }
+  	}
+  	return obj;
   };
 
 
