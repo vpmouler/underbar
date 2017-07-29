@@ -327,7 +327,7 @@
   	// same as extend, but check if key in obj first
   	for ( var i = 1; i < arguments.length; i++ ) {
       for ( var key in arguments[i] ) {
-      	if ( !key in obj )
+      	if ( !(key in obj) ) // need to put ! outside of parens
   		  obj[key] = arguments[i][key];
   	  }
   	}
@@ -374,8 +374,36 @@
   // _.memoize should return a function that, when called, will check if it has
   // already computed the result for the given argument and return that value
   // instead if possible.
-  _.memoize = function(func) {
-  };
+  _.memoize = function(func) { // arguments = sum funciton
+  	var result = {};
+  	return function() {
+  		var args = [...arguments]; // [1,2,3]
+  		var argsString = JSON.stringify(args); // "[1,2,3]"
+  		if ( result[argsString] ) {
+  			return result[argsString];
+  		} else {
+  		    result[argsString] = func.apply(this, arguments);
+  		    return result[argsString];
+  		}
+  	}
+  }
+
+
+
+  // 	return function() {
+  //     if (func(arguments) === func.apply(this,arguments)) {
+  //       // TIP: .apply(this, arguments) is the standard way to pass on all of the
+  //       // infromation from one function call to another.
+  //       result = func(arguments);
+  //     } else {
+  //     	result = func.apply(this,arguments);
+  //     }
+  //     return result;
+  //     }
+  // }
+  // memoSum = memoize(sum) // return this.yearToday - this.yearBorn
+  // memoSum([1,2,3]) > result
+  // memoSum([1,2,3]) = result
 
   // Delays a function for the given number of milliseconds, and then calls
   // it with the arguments supplied.
