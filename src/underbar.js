@@ -412,6 +412,8 @@
   // parameter. For example _.delay(someFunction, 500, 'a', 'b') will
   // call someFunction('a', 'b') after 500ms
   _.delay = function(func, wait) {
+  	var args = [...arguments];
+  	return setTimeout(function() {return func.apply(this, args.slice(2))}, wait)
   };
 
 
@@ -426,7 +428,45 @@
   // input array. For a tip on how to make a copy of an array, see:
   // http://mdn.io/Array.prototype.slice
   _.shuffle = function(array) {
-  };
+  	// var newArray = array.slice(0);
+  	var emptyArray = [];
+  	var randBetween = function(min, max) {
+		return Math.floor(Math.random()* (max - min + 1) + min);
+	};
+	// need to store randBetween within a loop in a var
+	var count = 0;
+	while ( count < array.length ) {
+		var randomIndex = randBetween(0, array.length-1);
+		if ( emptyArray[randomIndex] == undefined ) {
+			emptyArray[randomIndex] = array[count];
+			count++;
+		}
+	};
+	return emptyArray;
+	// for ( var i = 0; i < array.length; i++ ) {
+	// 	var randomIndex = randBetween(0, array.length-1);
+	// 	if
+	// 	emptyArray[] = array[i];
+	// }
+	// while ( !emptyArray[randBetween(0, array.length-1)] ) {
+
+
+};
+  	// access elements of array
+  	// check if elements are in new array --- has to be object, see below
+  	// if not, add to new array
+  	// math.random floor
+
+  	// use arguemnts arraylike object,
+  	// add them to new object, first checking if they exist 'in' new object (randomize here?)
+  	// turn object into array
+
+  	// while loop and incrememnting count on each addition, while checking if that element was used
+  	// for loop within while loop, using array[i] and array.length and Math.random to set new array's
+  	// indexs to array[i]; ---- but how to make sure not to override index
+  	// can store math.random in cache? if in cache, redo calculation (how?)
+  	// [0,1,2]
+  	// [ , ,0]
 
 
   /**
