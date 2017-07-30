@@ -374,7 +374,36 @@
   // _.memoize should return a function that, when called, will check if it has
   // already computed the result for the given argument and return that value
   // instead if possible.
-  _.memoize = function(func) { // arguments = sum funciton
+  _.memoize = function(func) { 
+  	var cache = {};
+  	return function() {
+  		var stringArgs = JSON.stringify(arguments);
+  		if ( stringArgs in cache ) {
+  			return cache[stringArgs];
+  		} else {
+  			cache[stringArgs] = func.apply(this,arguments);
+			return cache[stringArgs];
+		}
+  	}
+  }
+  /*
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   	var result = {};
   	return function() {
   		var args = [...arguments]; // [1,2,3]
@@ -404,7 +433,7 @@
   // memoSum = memoize(sum) // return this.yearToday - this.yearBorn
   // memoSum([1,2,3]) > result
   // memoSum([1,2,3]) = result
-
+*/
   // Delays a function for the given number of milliseconds, and then calls
   // it with the arguments supplied.
   //
