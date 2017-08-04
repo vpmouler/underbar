@@ -148,11 +148,55 @@
 
   // Produce a duplicate-free version of the array.
   _.uniq = function(array) {
+    // make empty array
+    // for each element of array, check if index is equal to -1 in empty array
+    // if it is, add it to that array
+    
+    var emptyArray = [];
+    _.each(array, function(element) {
+      if ( _.indexOf(emptyArray, element) === -1 ) {
+        emptyArray.push(element);
+      }
+    });
+    return emptyArray;
+    
+    /*
+    // make a new array and object
+    var emptyArray = [];
+    var emptyObject = {};
+    // add each element to a object property
+    _.each(array, function(element) {
+      emptyObject[element] = 'seva';
+    });
+    // object property names cant repeat
+    // for each prop in the object, push it to a new array
+    for ( var prop in emptyObject ) {
+      emptyArray.push(+prop);
+    }
+    return emptyArray;
+  */
+
+
   };
 
 
   // Return the results of applying an iterator to each element.
   _.map = function(collection, iterator) {
+    // decalre new array
+    var resultsArray = [];
+    _.each(collection, function(element) {
+      resultsArray.push(iterator(element))
+    })
+    return resultsArray;
+
+
+
+
+
+
+
+
+
     // map() is a useful primitive iteration function that works a lot
     // like each(), but in addition to running the operation on all
     // the members, it also maintains an array of results.
@@ -164,10 +208,34 @@
    * as an example of this.
    */
 
+
+
+
+
   // Takes an array of objects and returns and array of the values of
   // a certain property in it. E.g. take an array of people and return
   // an array of just their ages
   _.pluck = function(collection, key) {
+    return _.map(collection, function(element) {
+      return element[key];
+    })
+  }
+
+/*
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     // TIP: map is really handy when you want to transform an array of
     // values into a new array of values. _.pluck() is solved for you
     // as an example of this.
@@ -175,7 +243,7 @@
       return item[key];
     });
   };
-
+*/
   // Reduces an array or object to a single value by repetitively calling
   // iterator(accumulator, item) for each item. accumulator should be
   // the return value of the previous iterator call.
@@ -197,10 +265,73 @@
   //   }); // should be 5, regardless of the iterator function passed in
   //          No accumulator is given so the first element is used.
   _.reduce = function(collection, iterator, accumulator) {
+    if ( accumulator == undefined ) {
+      accumulator = collection[0];
+      _.each(collection.slice(1), function(element) {
+        accumulator = iterator(accumulator, element);
+      })
+    } else {
+      _.each(collection, function(element) {
+        accumulator = iterator(accumulator, element);
+      })
+    }
+    return accumulator;
+
+
+
+
+
   };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   // Determine if the array or object contains a given value (using `===`).
   _.contains = function(collection, target) {
+    return _.reduce(collection, function(start, element) {
+      if ( element === target ) {
+        return true;
+      }
+      return start === true;
+      // if ( start === true ) {
+      //   return true;
+      //   // return start === true;
+      // } else { return false; }
+    }, false)
+
+
+    /*
+    var truth = false;
+    _.each(collection, function(element) {
+      if ( element === target )
+        truth = true;
+    })
+    return truth;
+    */
+  }
+
+
+
+
+
+
+
+
+/*
+
+
+
     // TIP: Many iteration problems can be most easily expressed in
     // terms of reduce(). Here's a freebie to demonstrate!
     return _.reduce(collection, function(wasFound, item) {
@@ -211,15 +342,94 @@
     }, false);
   };
 
-
+*/
   // Determine whether all of the elements match a truth test.
   _.every = function(collection, iterator) {
+    return _.reduce(collection, function(start, element) {
+      if ( iterator && !iterator(element) ) {
+        return false;
+      }
+      if ( !iterator && element === false) {
+        return false;
+      }
+      return start === true;
+      // if ( start === false ) {
+      //   return false;
+      // } else {
+      //   return true;
+      // }
+    }, true)
+
+
+
+
+    /*
+    var truth = true;
+    _.each(collection, function(element) {
+      if ( iterator && !iterator(element) ) {
+        truth = false;
+      } 
+      if ( element === false ) {
+        truth = false;
+      }
+    })
+    return truth;
+  */
+
+
+
+
+
+
+
+
+
     // TIP: Try re-using reduce() here.
   };
 
   // Determine whether any of the elements pass a truth test. If no iterator is
   // provided, provide a default one
   _.some = function(collection, iterator) {
+    //.identity if no iterator
+/*
+    return _.every(collection, function(element) {
+      if ( iterator(element) ) // iterator(element) == element > 2
+        return true;
+    })
+    */
+    if ( !iterator ) {
+      iterator = Boolean
+    }
+    return !(_.every(collection, function(element) {
+      return !iterator(element);
+    }));
+    /*
+    var truth = false;
+    _.every(collection, function(element) {
+      if ( iterator(element) ) {
+        truth = true;
+      }
+    })
+
+
+    return _.reduce(collection, function(start, element) {
+      if ( iterator(element) ) {
+        return true;
+      }
+      return start === true;   
+    }, false)
+*/
+
+
+
+
+
+
+
+
+
+
+
     // TIP: There's a very clever way to re-use every() here.
   };
 
@@ -243,11 +453,35 @@
   //     bla: "even more stuff"
   //   }); // obj1 now contains key1, key2, key3 and bla
   _.extend = function(obj) {
+    for ( var i = 1; i < arguments.length; i++) {
+      for ( var keys in arguments[i] ) {
+        obj[keys] = arguments[i][keys];
+      }
+    };
+    return obj;
+
+
+
+
+
+
   };
 
   // Like extend, but doesn't ever overwrite a key that already
   // exists in obj
   _.defaults = function(obj) {
+    // loop through arguments to see if other objects are there
+    for ( var i = 0; i < arguments.length; i++ ) {
+      for ( var key in arguments[i] ) {
+        if (!(key in obj)) {
+            obj[key] = arguments[i][key];
+          }
+        }
+      }
+    // loop through those objects keys
+    // check if key is in obj, if no:
+    // add them to obj
+    return obj;
   };
 
 
