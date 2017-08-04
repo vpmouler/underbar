@@ -7,7 +7,6 @@
   // seem very useful, but remember it--if a function needs to provide an
   // iterator when the user does not pass one in, this will be handy.
   _.identity = function(val) {
-    return val;
   };
 
   /**
@@ -38,14 +37,6 @@
   // Like first, but for the last elements. If n is undefined, return just the
   // last element.
   _.last = function(array, n) {
-        // return n === undefined ? array[array.length-1] : array.slice(-n); // how to incorp n == 0?
-        if (n === undefined)
-          return array[array.length-1];
-        else if (n === 0)
-          return [];
-        else
-          return array.slice(-n);
-
   };
 
   // Call iterator(value, key, collection) for each element of collection.
@@ -54,15 +45,6 @@
   // Note: _.each does not have a return value, but rather simply runs the
   // iterator function over each item in the input collection.
   _.each = function(collection, iterator) {
-    if (Array.isArray(collection)) {
-      for (var i = 0; i < collection.length; i++) {
-        iterator(collection[i], i, collection); 
-      }
-    }
-    else {
-      for (var key in collection)
-        iterator(collection[key], key, collection)
-    }
   };
 
   // Returns the index at which value can be found in the array, or -1 if value
@@ -74,7 +56,7 @@
     var result = -1;
 
     _.each(array, function(item, index) {
-      if (item === target && result === -1) { // the result === -1 is so that it returns only the first matching element
+      if (item === target && result === -1) {
         result = index;
       }
     });
@@ -84,59 +66,21 @@
 
   // Return all elements of an array that pass a truth test.
   _.filter = function(collection, test) {
-    var newArray = [];
-    _.each(collection, function(element) {
-      // if (test(element))
-        // newArray.push(element);
-      test(element) ? newArray.push(element) : null; // there is no difference if we use return statement or not? is this bc we're using forEach? Feel like there should be some semantical diff if we use return or not
-    })
-    return newArray;
   };
 
   // Return all elements of an array that don't pass a truth test.
   _.reject = function(collection, test) {
     // TIP: see if you can re-use _.filter() here, without simply
     // copying code in and modifying it
-    var newArray = [];
-    _.filter(collection, function(element) {
-      if (!test(element))
-        newArray.push(element);
-    })
-    return newArray;
   };
 
   // Produce a duplicate-free version of the array.
-
   _.uniq = function(array) {
-    var uniqArray = [];
-    for (var i = 0; i < array.length; i++) {
-      if(_.indexOf(uniqArray, array[i]) == -1)
-        uniqArray.push(array[i]);
-    }
-    return uniqArray;
-  }
-/*
-  _.uniq = function(array) {
-    var uniqArray = [];
-    // loop through array, if element indexOf != -1, then its in array
-    // run another loop through array elements
-    for (var i = 0; i < array.length; i++) {
-      if(_.indexOf(uniqArray, array[i] == -1) { // it is inside the array
-        uniqArray.push(array[i])
-      };
-    };
-    return uniqArray;
   };
-*/
 
 
   // Return the results of applying an iterator to each element.
   _.map = function(collection, iterator) {
-    var results = [];
-    _.each(collection, function(element) {
-      results.push(iterator(element))
-    })
-    return results;
     // map() is a useful primitive iteration function that works a lot
     // like each(), but in addition to running the operation on all
     // the members, it also maintains an array of results.
@@ -181,17 +125,6 @@
   //   }); // should be 5, regardless of the iterator function passed in
   //          No accumulator is given so the first element is used.
   _.reduce = function(collection, iterator, accumulator) {
-    if (accumulator === undefined) {
-      accumulator = collection[0];
-      _.each(collection.slice(1), function(element) {
-        accumulator = iterator(accumulator, element);
-      })
-    } else {
-      _.each(collection, function(element) {
-        accumulator = iterator(accumulator, element);
-      })
-    }
-    return accumulator;
   };
 
   // Determine if the array or object contains a given value (using `===`).
@@ -205,90 +138,17 @@
       return item === target;
     }, false);
   };
-//[0,1,0]
+
 
   // Determine whether all of the elements match a truth test.
   _.every = function(collection, iterator) {
     // TIP: Try re-using reduce() here.
-/*
-    var truth = true;
-    //if ( iterator !== undefined) {
-      for (var i = 0; i < collection.length; i++) {
-        //if iterator doesnt exist, do: collection[i] !== true
-        //if iterator does exist, do: !iterator(collection[i])
-        //if(!iterator(collection[i]) || collection[i] !== true)
-        if (iterator == undefined && collection[i] !== true) {
-          truth = false;
-        }
-        if (iterator !== undefined && !iterator(collection[i])) {
-          truth = false;
-        }
-      }
-      */
-    return _.reduce(collection, function(start, element) {
-
-      if ( iterator && !iterator(element) ) {
-        return false;
-      }
-      if ( !iterator && element !== true ) {
-        return false;
-      }
-      return start == true;
-    }, true)
-    // ex. array = [10,5,10]
-    // } else {
-    //   for ( var i = 0; i < collection.length; i++ ) {
-    //     if ( collection[i] !== true )
-    //       truth = false;
-    //   }
-    // }
-
-    // return truth;
-
-    // return _.reduce(collection, function(start, element) {
-    //   if (iterator(element)) {
-    //     return true;
-    //   }
-    //   else {
-    //     return false;
-    //   }
-    // }, false);
   };
-// [1,3,4].every(function(element) { return element > 2})
 
   // Determine whether any of the elements pass a truth test. If no iterator is
   // provided, provide a default one
   _.some = function(collection, iterator) {
     // TIP: There's a very clever way to re-use every() here.
-    // every checks whether every element is true
-    // it start with true, and if one element is false, consecutively returns false
-    // var truth = false;
-    // return _.every(collection, function(element) {
-    // 	if ( iterator(element) )
-    // 		truth = true;
-    // 	return truth == true;
-    // })
-
-    /*
-    var truth = false;
-    return _.every(collection, function(element) {
-      if ( iterator && iterator(element) )
-        truth = true;
-      if ( !iterator && element == true)
-        truth = true;
-      return truth;
-    })
-    */
-    // [null, 0, 'yes', false]
-    //_.some([1, 10, 29], isEven)
-
-    return _.reduce(collection, function(start, element) {
-      if ( iterator && iterator(element) )
-        return true;
-      if ( !iterator && element == true)
-        return true;
-      return start == true;
-    }, false)
   };
 
 
@@ -311,27 +171,11 @@
   //     bla: "even more stuff"
   //   }); // obj1 now contains key1, key2, key3 and bla
   _.extend = function(obj) {
-  	// arguments can be more than 1 - loop through arguments
-  	// loop through each arguments key/value and add it to obj
-  	for ( var i = 1; i < arguments.length; i++ ) {
-  		for ( var key in arguments[i] ) {
-  			obj[key] = arguments[i][key];
-  		}
-  	}
-  	return obj;
   };
 
   // Like extend, but doesn't ever overwrite a key that already
   // exists in obj
   _.defaults = function(obj) {
-  	// same as extend, but check if key in obj first
-  	for ( var i = 1; i < arguments.length; i++ ) {
-      for ( var key in arguments[i] ) {
-      	if ( !(key in obj) ) // need to put ! outside of parens
-  		  obj[key] = arguments[i][key];
-  	  }
-  	}
-  	return obj;
   };
 
 
@@ -374,66 +218,9 @@
   // _.memoize should return a function that, when called, will check if it has
   // already computed the result for the given argument and return that value
   // instead if possible.
-  _.memoize = function(func) { 
-  	var cache = {};
-  	return function() {
-  		var stringArgs = JSON.stringify(arguments);
-  		if ( stringArgs in cache ) {
-  			return cache[stringArgs];
-  		} else {
-  			cache[stringArgs] = func.apply(this,arguments);
-			return cache[stringArgs];
-		}
-  	}
-  }
-  /*
+  _.memoize = function(func) {
+  };
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  	var result = {};
-  	return function() {
-  		var args = [...arguments]; // [1,2,3]
-  		var argsString = JSON.stringify(args); // "[1,2,3]"
-  		if ( result[argsString] ) {
-  			return result[argsString];
-  		} else {
-  		    result[argsString] = func.apply(this, arguments);
-  		    return result[argsString];
-  		}
-  	}
-  }
-
-
-
-  // 	return function() {
-  //     if (func(arguments) === func.apply(this,arguments)) {
-  //       // TIP: .apply(this, arguments) is the standard way to pass on all of the
-  //       // infromation from one function call to another.
-  //       result = func(arguments);
-  //     } else {
-  //     	result = func.apply(this,arguments);
-  //     }
-  //     return result;
-  //     }
-  // }
-  // memoSum = memoize(sum) // return this.yearToday - this.yearBorn
-  // memoSum([1,2,3]) > result
-  // memoSum([1,2,3]) = result
-*/
   // Delays a function for the given number of milliseconds, and then calls
   // it with the arguments supplied.
   //
@@ -441,8 +228,6 @@
   // parameter. For example _.delay(someFunction, 500, 'a', 'b') will
   // call someFunction('a', 'b') after 500ms
   _.delay = function(func, wait) {
-  	var args = [...arguments];
-  	return setTimeout(function() {return func.apply(this, args.slice(2))}, wait)
   };
 
 
@@ -457,45 +242,7 @@
   // input array. For a tip on how to make a copy of an array, see:
   // http://mdn.io/Array.prototype.slice
   _.shuffle = function(array) {
-  	// var newArray = array.slice(0);
-  	var emptyArray = [];
-  	var randBetween = function(min, max) {
-		return Math.floor(Math.random()* (max - min + 1) + min);
-	};
-	// need to store randBetween within a loop in a var
-	var count = 0;
-	while ( count < array.length ) {
-		var randomIndex = randBetween(0, array.length-1);
-		if ( emptyArray[randomIndex] == undefined ) {
-			emptyArray[randomIndex] = array[count];
-			count++;
-		}
-	};
-	return emptyArray;
-	// for ( var i = 0; i < array.length; i++ ) {
-	// 	var randomIndex = randBetween(0, array.length-1);
-	// 	if
-	// 	emptyArray[] = array[i];
-	// }
-	// while ( !emptyArray[randBetween(0, array.length-1)] ) {
-
-
-};
-  	// access elements of array
-  	// check if elements are in new array --- has to be object, see below
-  	// if not, add to new array
-  	// math.random floor
-
-  	// use arguemnts arraylike object,
-  	// add them to new object, first checking if they exist 'in' new object (randomize here?)
-  	// turn object into array
-
-  	// while loop and incrememnting count on each addition, while checking if that element was used
-  	// for loop within while loop, using array[i] and array.length and Math.random to set new array's
-  	// indexs to array[i]; ---- but how to make sure not to override index
-  	// can store math.random in cache? if in cache, redo calculation (how?)
-  	// [0,1,2]
-  	// [ , ,0]
+  };
 
 
   /**
