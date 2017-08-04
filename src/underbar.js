@@ -79,6 +79,15 @@
   // Returns the index at which value can be found in the array, or -1 if value
   // is not present in the array.
   _.indexOf = function(array, target){
+    var targetIndex = -1;
+    _.each(array, function(element, index) {
+      if ( element === target && targetIndex === -1 ) {
+        targetIndex = index;
+      }
+    });
+    return targetIndex;
+
+    /*
     var targetIndex = []
     _.each(array, function(element, index) {
       if ( element === target ) {
@@ -87,7 +96,7 @@
       }
     });
     return targetIndex.length == 0 ? -1 : targetIndex[0];
-
+  */
 
 
 
@@ -105,13 +114,37 @@
 
   // Return all elements of an array that pass a truth test.
   _.filter = function(collection, test) {
+    var newArray = [];
+    _.each(collection, function(element) {
+      if ( test(element) ) {
+        newArray.push(element)
+      }
+    })
+    return newArray;
   };
 
   // Return all elements of an array that don't pass a truth test.
   _.reject = function(collection, test) {
     // TIP: see if you can re-use _.filter() here, without simply
     // copying code in and modifying it
+    /*
+    var newArray = [];
+    _.each(collection, function(element) {
+      if ( test(element) == false ) {
+        newArray.push(element)
+      }
+    })
+    return newArray;
+    */
+    return _.filter(collection, function(element) {
+      return test(element) === false; // element > 2
+    })
+    
   };
+  //
+// var isOdd = function(num) { return num % 2 !== 0; };
+// var evens = _.reject([1, 2, 3, 4, 5, 6], isOdd);
+// expect(evens).to.eql([2, 4, 6]);
 
   // Produce a duplicate-free version of the array.
   _.uniq = function(array) {
