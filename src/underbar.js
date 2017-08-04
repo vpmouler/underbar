@@ -496,6 +496,28 @@
   // Return a function that can be called at most one time. Subsequent calls
   // should return the previously returned value.
   _.once = function(func) {
+    /*
+    var cache = {};
+    // var result = 
+    if ( !('result' in cache) ) {
+      cache.result = func.apply(this, arguments);
+      return func.apply(this, arguments);
+    } else {
+      return cache.result;
+    };
+*/
+
+
+
+
+
+
+
+
+
+
+
+
     // TIP: These variables are stored in a "closure scope" (worth researching),
     // so that they'll remain available to the newly-generated function every
     // time it's called.
@@ -514,6 +536,7 @@
       // The new function always returns the originally computed result.
       return result;
     };
+    
   };
 
   // Memorize an expensive function's results by storing them. You may assume
@@ -525,6 +548,14 @@
   // already computed the result for the given argument and return that value
   // instead if possible.
   _.memoize = function(func) {
+    var cache = {};
+    return function() {
+      var argumentsString = JSON.stringify([...arguments]);
+      if ( !(argumentsString in cache) ) {
+        cache[argumentsString] = func.apply(this, [...arguments]);
+      }
+      return cache[argumentsString];
+    }
   };
 
   // Delays a function for the given number of milliseconds, and then calls
@@ -534,6 +565,8 @@
   // parameter. For example _.delay(someFunction, 500, 'a', 'b') will
   // call someFunction('a', 'b') after 500ms
   _.delay = function(func, wait) {
+    var args = [...arguments];
+    return setTimeout (function() {return func.apply(this, args.slice(2))}, wait)
   };
 
 
@@ -548,6 +581,21 @@
   // input array. For a tip on how to make a copy of an array, see:
   // http://mdn.io/Array.prototype.slice
   _.shuffle = function(array) {
+    var copyArray = array.slice(0);
+    var emptyArray = [];
+    var random = function() {
+      return Math.round(Math.random()*((array.length-1)-0) + 0)
+    };
+    // make object check keys or find if array index not undefined
+    var index = 0;
+    while ( index < array.length ) {
+      var randomIndex = random();
+      if ( emptyArray[randomIndex] == undefined ) {
+        emptyArray[randomIndex] = array[index];
+        index++;
+      } 
+    }
+    return emptyArray;
   };
 
 
