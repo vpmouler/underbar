@@ -42,6 +42,17 @@
   // Like first, but for the last elements. If n is undefined, return just the
   // last element.
   _.last = function(array, n) {
+    //return n ? array.slice(array.length-n) : array[array.length-1]; 
+
+    
+    if ( n === undefined ) {
+      return array[array.length-1];
+    };
+    if ( n === 0 ) {
+      return [];
+    }
+    return array.slice(-n);
+    
   };
 
   // Call iterator(value, key, collection) for each element of collection.
@@ -50,24 +61,47 @@
   // Note: _.each does not have a return value, but rather simply runs the
   // iterator function over each item in the input collection.
   _.each = function(collection, iterator) {
+    // loop over collection
+    if ( Array.isArray(collection) ) {
+      for ( var i = 0; i < collection.length; i ++ ) {
+        iterator(collection[i], i, collection);
+      }
+    } else {
+      // this is an object
+      // run through the object
+      for ( var prop in collection ) {
+        iterator(collection[prop], prop, collection);
+      }
+    }
+    // for each item in collection, call iterator
   };
 
   // Returns the index at which value can be found in the array, or -1 if value
   // is not present in the array.
   _.indexOf = function(array, target){
+    var targetIndex = []
+    _.each(array, function(element, index) {
+      if ( element === target ) {
+        targetIndex.push(index);
+        // target = undefined;
+      }
+    });
+    return targetIndex.length == 0 ? -1 : targetIndex[0];
+
+
+
+
+
+
+
+
+
+
     // TIP: Here's an example of a function that needs to iterate, which we've
     // implemented for you. Instead of using a standard `for` loop, though,
     // it uses the iteration helper `each`, which you will need to write.
-    var result = -1;
 
-    _.each(array, function(item, index) {
-      if (item === target && result === -1) {
-        result = index;
-      }
-    });
-
-    return result;
-  };
+  }
 
   // Return all elements of an array that pass a truth test.
   _.filter = function(collection, test) {
